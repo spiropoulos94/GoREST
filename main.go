@@ -11,14 +11,18 @@ import (
 
 func main() {
 
-	router := gin.Default()
+	r := gin.Default()
 
 	models.SetupDatabase()
 	models.MakeTables(false)
 
-	router.GET("/user", controllers.GetUsers)
-	router.GET("/user/:id", controllers.FindUser)
-	router.POST("/user", controllers.CreateUser)
+	// User Routes
+	r.GET("/user", controllers.GetUsers)
+	r.GET("/user/:id", controllers.FindUser)
+	r.POST("/user", controllers.CreateUser)
 
-	router.Run()
+	// List Routes
+	r.POST("/list", controllers.CreateList)
+
+	r.Run()
 }

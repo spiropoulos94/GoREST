@@ -11,18 +11,6 @@ import (
 
 var DB *gorm.DB
 
-type List struct {
-	gorm.Model
-	Name      string
-	ListItems []ListItem
-}
-
-type ListItem struct {
-	gorm.Model
-	Name   string
-	ListID uint
-}
-
 func SetupDatabase() {
 	godotenv.Load(".env")
 
@@ -47,12 +35,12 @@ func MakeTables(allNew bool) {
 	if allNew {
 		DB.Migrator().DropTable(&List{})
 		DB.Migrator().DropTable("lists")
-		DB.Migrator().DropTable(&ListItem{})
+		DB.Migrator().DropTable(&Item{})
 		DB.Migrator().DropTable("list_items")
 	}
 
 	DB.AutoMigrate(&List{})
-	DB.AutoMigrate(&ListItem{})
+	DB.AutoMigrate(&Item{})
 	DB.AutoMigrate(&User{})
 
 }
