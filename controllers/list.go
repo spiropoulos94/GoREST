@@ -1,9 +1,21 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"encoding/json"
+	"fmt"
+	"go-api/models"
+	"io/ioutil"
+
+	"github.com/gin-gonic/gin"
+)
 
 func CreateList(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "List Created",
-	})
+	var list models.List
+	// var items []models.Item
+
+	jsonData, _ := ioutil.ReadAll(c.Request.Body)
+	json.Unmarshal(jsonData, &list)
+
+	fmt.Println("list")
+	fmt.Println(list)
 }
