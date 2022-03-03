@@ -4,6 +4,6 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Name string `json:"name"`
+	Name string `json:"Name" gorm:"not null;"`
 	Age  int    `json:"age"`
 }

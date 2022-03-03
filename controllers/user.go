@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go-api/models"
 	"io/ioutil"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -50,6 +51,15 @@ func CreateUser(c *gin.Context) {
 	newUser := models.User{}
 	json.Unmarshal(jsonData, &newUser)
 
+	newUser.Name = strings.Trim(newUser.Name, " ")
+
+	if newUser.Name == "" {
+		fmt.Println("den exeiu onoma")
+		c.JSON(400, gin.H{
+			"message": "Please add user name",
+		})
+	}
+
 	result := models.DB.Create(&newUser)
 
 	if result.Error != nil {
@@ -57,6 +67,7 @@ func CreateUser(c *gin.Context) {
 		c.JSON(400, gin.H{
 			"message": "Error Creating new record",
 		})
+		return
 	}
 
 	fmt.Println("User Created, Rows Affected: ", result.RowsAffected)
