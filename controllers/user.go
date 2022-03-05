@@ -84,7 +84,7 @@ func DeleteUser(c *gin.Context) {
 
 	if queryResult.Error != nil {
 		c.JSON(404, gin.H{
-			"message": queryResult.Error,
+			"message": queryResult.Error.Error(),
 		})
 		return
 	}
@@ -95,7 +95,7 @@ func DeleteUser(c *gin.Context) {
 
 	if result.Error != nil {
 		c.JSON(404, gin.H{
-			"message": queryResult.Error,
+			"message": queryResult.Error.Error(),
 		})
 		return
 	} else {
