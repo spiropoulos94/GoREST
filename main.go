@@ -22,6 +22,7 @@ func main() {
 	r.POST("/user", controllers.CreateUser)
 
 	// List Routes
+	r.GET("/list", controllers.GetLists)
 	r.POST("/list", controllers.CreateList)
 	r.GET("/list/:id", controllers.FindList)
 

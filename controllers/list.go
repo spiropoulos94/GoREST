@@ -64,3 +64,19 @@ func FindList(c *gin.Context) {
 		"data":    list,
 	})
 }
+
+func GetLists(c *gin.Context) {
+	var lists []models.List
+	result := models.DB.Find(&lists)
+
+	if result.Error != nil {
+		c.JSON(400, gin.H{
+			"message": "could not retrieve data",
+		})
+	}
+
+	c.JSON(200, gin.H{
+		"message": "lists successfully retrieved",
+		"data":    lists,
+	})
+}
