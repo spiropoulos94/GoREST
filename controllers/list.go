@@ -46,7 +46,7 @@ func CreateList(c *gin.Context) {
 	})
 }
 
-func GetList(c *gin.Context) {
+func FindList(c *gin.Context) {
 
 	id := c.Param("id")
 

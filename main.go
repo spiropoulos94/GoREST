@@ -23,7 +23,7 @@ func main() {
 
 	// List Routes
 	r.POST("/list", controllers.CreateList)
-	r.GET("/list/:id", controllers.GetList)
+	r.GET("/list/:id", controllers.FindList)
 
 	r.Run()
 }
