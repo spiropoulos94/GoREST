@@ -17,7 +17,7 @@ func GetUsers(c *gin.Context) {
 
 	if result.Error != nil {
 		c.JSON(400, gin.H{
-			"message": "could not retrieve data",
+			"message": result.Error,
 		})
 	}
 
@@ -36,7 +36,7 @@ func FindUser(c *gin.Context) {
 
 	if result.Error != nil {
 		c.JSON(400, gin.H{
-			"message": "Could not find user",
+			"message": result.Error,
 		})
 		return
 	}
@@ -65,7 +65,7 @@ func CreateUser(c *gin.Context) {
 	if result.Error != nil {
 		fmt.Println("error creating user")
 		c.JSON(400, gin.H{
-			"message": "Error Creating new record",
+			"message": result.Error,
 		})
 		return
 	}
@@ -80,11 +80,22 @@ func CreateUser(c *gin.Context) {
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 
-	result := models.DB.Delete(&models.User{}, id)
+	queryResult := models.DB.First(&models.User{}, id)
+
+	if queryResult.Error != nil {
+		c.JSON(404, gin.H{
+			"message": queryResult.Error,
+		})
+		return
+	}
+
+	fmt.Println(queryResult)
+
+	result := models.DB.Unscoped().Delete(&models.User{}, id)
 
 	if result.Error != nil {
 		c.JSON(404, gin.H{
-			"message": "Could not find user",
+			"message": queryResult.Error,
 		})
 		return
 	} else {

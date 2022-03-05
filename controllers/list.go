@@ -35,7 +35,7 @@ func CreateList(c *gin.Context) {
 
 	if result.Error != nil {
 		c.JSON(400, gin.H{
-			"message": "could not create list",
+			"message": result.Error,
 		})
 		return
 	}
@@ -55,7 +55,7 @@ func FindList(c *gin.Context) {
 
 	if result.Error != nil {
 		c.JSON(400, gin.H{
-			"message": "Could not find list",
+			"message": result.Error,
 		})
 		return
 	}
@@ -71,7 +71,7 @@ func GetLists(c *gin.Context) {
 
 	if result.Error != nil {
 		c.JSON(400, gin.H{
-			"message": "could not retrieve data",
+			"message": result.Error,
 		})
 	}
 
