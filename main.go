@@ -20,6 +20,7 @@ func main() {
 	r.GET("/user", controllers.GetUsers)
 	r.GET("/user/:id", controllers.FindUser)
 	r.POST("/user", controllers.CreateUser)
+	r.DELETE("/user/:id", controllers.DeleteUser)
 
 	// List Routes
 	r.GET("/list", controllers.GetLists)

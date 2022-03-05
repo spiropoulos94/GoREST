@@ -76,3 +76,20 @@ func CreateUser(c *gin.Context) {
 		"user":    newUser,
 	})
 }
+
+func DeleteUser(c *gin.Context) {
+	id := c.Param("id")
+
+	result := models.DB.Delete(&models.User{}, id)
+
+	if result.Error != nil {
+		c.JSON(404, gin.H{
+			"message": "Could not find user",
+		})
+		return
+	} else {
+		c.JSON(200, gin.H{
+			"message": "User deleted!",
+		})
+	}
+}
