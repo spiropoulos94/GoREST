@@ -26,6 +26,7 @@ func main() {
 	r.GET("/list", controllers.GetLists)
 	r.POST("/list", controllers.CreateList)
 	r.GET("/list/:id", controllers.FindList)
+	r.DELETE("/list/:id", controllers.DeleteList)
 
 	r.Run()
 }
