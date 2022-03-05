@@ -45,3 +45,22 @@ func CreateList(c *gin.Context) {
 		"data":    list,
 	})
 }
+
+func GetList(c *gin.Context) {
+
+	id := c.Param("id")
+
+	var list models.List
+	result := models.DB.First(&list, id)
+
+	if result.Error != nil {
+		c.JSON(400, gin.H{
+			"message": "Could not find list",
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message": "List found",
+		"data":    list,
+	})
+}
