@@ -10,6 +10,7 @@ import (
 )
 
 func CreateList(c *gin.Context) {
+	//checkare mipws edw mesa ginetai to lathos, ftiaxnontai lathos relations
 	var list models.List
 
 	jsonData, _ := ioutil.ReadAll(c.Request.Body)
