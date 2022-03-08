@@ -93,9 +93,11 @@ func DeleteList(c *gin.Context) {
 		return
 	}
 
-	// result := models.DB.Unscoped().Delete(&models.List{}, id)
-	//the following soft deletes the list
-	result := models.DB.Select("Items").Delete(&models.List{}, id)
+	//Delete lists items from items table
+	//..code
+
+	// Delete list and list_items relevant items
+	result := models.DB.Unscoped().Delete(&models.List{}, id)
 
 	if result.Error != nil {
 		c.JSON(404, gin.H{
