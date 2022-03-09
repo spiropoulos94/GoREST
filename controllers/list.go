@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"go-api/models"
 	"io/ioutil"
+	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -106,4 +107,24 @@ func DeleteList(c *gin.Context) {
 			"message": "List deleted!",
 		})
 	}
+}
+
+func UpdateList(c *gin.Context) {
+	// Check if record exists
+	id := c.Param("id")
+	queryResult := models.DB.First(&models.List{}, id)
+
+	if queryResult.Error != nil {
+		c.JSON(404, gin.H{
+			"message": queryResult.Error.Error(),
+		})
+		return
+	}
+
+	var list models.List
+	if err := c.ShouldBindJSON(&list); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 }
