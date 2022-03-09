@@ -94,10 +94,6 @@ func DeleteList(c *gin.Context) {
 		return
 	}
 
-	//Delete lists items from items table
-	//..code
-
-	// Delete list and list_items relevant items
 	result := models.DB.Unscoped().Delete(&models.List{}, id)
 
 	if result.Error != nil {
