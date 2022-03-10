@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"go-api/models"
 	"io/ioutil"
 	"net/http"
@@ -112,7 +113,9 @@ func DeleteList(c *gin.Context) {
 func UpdateList(c *gin.Context) {
 	// Check if record exists
 	id := c.Param("id")
-	queryResult := models.DB.First(&models.List{}, id)
+	var list models.List
+
+	queryResult := models.DB.First(&list, id)
 
 	if queryResult.Error != nil {
 		c.JSON(404, gin.H{
@@ -121,10 +124,28 @@ func UpdateList(c *gin.Context) {
 		return
 	}
 
-	var list models.List
-	if err := c.ShouldBindJSON(&list); err != nil {
+	var newList models.List
+
+	if err := c.ShouldBindJSON(&newList); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	fmt.Println("list")
+	fmt.Println(list)
+	fmt.Println("newList")
+	fmt.Println(newList)
+	fmt.Println("newList ITEMS:")
+	fmt.Println(newList.Items)
+
+	models.DB.Model(&list).Where("id = ?", id).Updates(newList)
+
+	models.DB.Unscoped().Delete(&models.Item{}, "list_id LIKE ?", id)
+
+	// models.DB.Where("list_id = ?", list.ID).Delete(&models.Item{})
+
+	//mexri edw ftiaxnei nea lista kai svinei palia items
+
+	models.DB.Model(&list).Association("Items").Append(newList.Items)
 
 }
