@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"go-api/models"
 	"io/ioutil"
 	"net/http"
@@ -131,20 +130,15 @@ func UpdateList(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("list")
-	fmt.Println(list)
-	fmt.Println("newList")
-	fmt.Println(newList)
-	fmt.Println("newList ITEMS:")
-	fmt.Println(newList.Items)
+	// Updates list properties
 
 	models.DB.Model(&list).Where("id = ?", id).Updates(newList)
 
+	// Deletes current list items to replace them with new ones
+
 	models.DB.Unscoped().Delete(&models.Item{}, "list_id LIKE ?", id)
 
-	// models.DB.Where("list_id = ?", list.ID).Delete(&models.Item{})
-
-	//mexri edw ftiaxnei nea lista kai svinei palia items
+	//Replaces new items
 
 	models.DB.Model(&list).Association("Items").Append(newList.Items)
 
