@@ -53,7 +53,7 @@ func FindList(c *gin.Context) {
 	id := c.Param("id")
 
 	var list models.List
-	result := models.DB.First(&list, id)
+	result := models.DB.Preload("Items").First(&list, id)
 
 	if result.Error != nil {
 		c.JSON(400, gin.H{
@@ -69,7 +69,7 @@ func FindList(c *gin.Context) {
 
 func GetLists(c *gin.Context) {
 	var lists []models.List
-	result := models.DB.Find(&lists)
+	result := models.DB.Preload("Items").Find(&lists)
 
 	if result.Error != nil {
 		c.JSON(400, gin.H{
