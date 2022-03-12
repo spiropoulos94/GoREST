@@ -132,14 +132,34 @@ func UpdateList(c *gin.Context) {
 
 	// Updates list properties
 
-	models.DB.Model(&list).Where("id = ?", id).Updates(newList)
+	if result := models.DB.Model(&list).Where("id = ?", id).Updates(newList); result.Error != nil {
+		c.JSON(404, gin.H{
+			"message": result.Error.Error(),
+		})
+		return
+	}
 
 	// Deletes current list items to replace them with new ones
 
-	models.DB.Unscoped().Delete(&models.Item{}, "list_id LIKE ?", id)
+	if result := models.DB.Unscoped().Delete(&models.Item{}, "list_id LIKE ?", id); result.Error != nil {
+		c.JSON(404, gin.H{
+			"message": result.Error.Error(),
+		})
+		return
+	}
 
 	//Replaces new items
 
-	models.DB.Model(&list).Association("Items").Append(newList.Items)
+	if err := models.DB.Model(&list).Association("Items").Append(newList.Items); err != nil {
+		c.JSON(404, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "List Updated",
+		"data":    list,
+	})
 
 }
