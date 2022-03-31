@@ -58,6 +58,8 @@ func parseToken(token_string string) *Claims {
 		fmt.Println(err.Error())
 	}
 
+	fmt.Println("claims")
+	fmt.Println(claims)
 	return claims
 }
 
