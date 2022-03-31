@@ -28,5 +28,8 @@ func routerStart() {
 	list.DELETE("/:id", controllers.DeleteList)
 	list.PUT("/:id", controllers.UpdateList)
 
+	// Auth routes
+	router.POST("/signup", controllers.Signup)
+
 	router.Run()
 }
