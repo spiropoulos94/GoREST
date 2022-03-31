@@ -7,6 +7,7 @@ import (
 	"go-api/utils"
 	"io/ioutil"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -21,9 +22,29 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-// func newToken(user models.User) string {
+func newToken(user models.User) (string, error) {
 
-// }
+	expirationTime := time.Now().Add(48 * time.Hour)
+
+	claims := &Claims{
+		User: user,
+		StandardClaims: jwt.StandardClaims{
+			// In JWT, the expiry time is expressed as unix milliseconds
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := token.SignedString(jwtKey)
+
+	if err != nil {
+		// If there is an error in creating the JWT return an internal server error
+		return "", err
+	}
+
+	return tokenString, nil
+}
 
 //  parse token reads a jwt token and returns a models.User struct
 
@@ -45,6 +66,8 @@ func Signup(c *gin.Context) {
 	if !userExists {
 		user.Password, _ = utils.HashPassword(user.Password)
 		models.DB.Create(&user)
+
+		token := newToken()
 
 		c.JSON(201, gin.H{
 			"message": "user successfully created",
