@@ -67,12 +67,12 @@ func Signup(c *gin.Context) {
 		user.Password, _ = utils.HashPassword(user.Password)
 		models.DB.Create(&user)
 
-		token := newToken()
+		token, _ := newToken(user)
 
 		c.JSON(201, gin.H{
 			"message": "user successfully created",
 			"user":    user,
-			// "token":   token,
+			"token":   token,
 		})
 	} else {
 		c.JSON(400, gin.H{
