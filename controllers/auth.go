@@ -43,7 +43,9 @@ func Signup(c *gin.Context) {
 	fmt.Println(userExists)
 
 	if !userExists {
+		user.Password, _ = utils.HashPassword(user.Password)
 		models.DB.Create(&user)
+
 		c.JSON(201, gin.H{
 			"message": "user successfully created",
 			"user":    user,
