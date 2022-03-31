@@ -46,6 +46,21 @@ func newToken(user models.User) (string, error) {
 	return tokenString, nil
 }
 
+func parseToken(token_string string) {
+	fmt.Println("token is : ", token_string)
+
+	claims := &Claims{}
+
+	tkn, _ := jwt.ParseWithClaims(token_string, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	})
+
+	fmt.Println("token_string", token_string)
+	fmt.Println("tkn", tkn)
+	fmt.Println("claims", claims)
+
+}
+
 //  parse token reads a jwt token and returns a models.User struct
 
 func Signup(c *gin.Context) {
