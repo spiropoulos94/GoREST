@@ -86,14 +86,12 @@ func Signup(c *gin.Context) {
 
 		token, _ := newToken(user)
 
-		parseToken(token)
-
-		// 	c.JSON(201, gin.H{
-		// 		"message": "user successfully created",
-		// 		"user":    user,
-		// 		"token":   token,
-		// 	})
-		// } else {
+		c.JSON(201, gin.H{
+			"message": "user successfully created",
+			"user":    user,
+			"token":   token,
+		})
+	} else {
 		c.JSON(400, gin.H{
 			"message": "user already exists",
 		})
