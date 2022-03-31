@@ -24,7 +24,7 @@ type Claims struct {
 
 func newToken(user models.User) (string, error) {
 
-	expirationTime := time.Now().Add(48 * time.Hour)
+	expirationTime := time.Now().Add(120 * time.Hour) // 5 days
 
 	claims := &Claims{
 		User: user,
@@ -46,19 +46,19 @@ func newToken(user models.User) (string, error) {
 	return tokenString, nil
 }
 
-func parseToken(token_string string) {
-	fmt.Println("token is : ", token_string)
+func parseToken(token_string string) *Claims {
 
 	claims := &Claims{}
 
-	tkn, _ := jwt.ParseWithClaims(token_string, claims, func(token *jwt.Token) (interface{}, error) {
+	_, err := jwt.ParseWithClaims(token_string, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	})
 
-	fmt.Println("token_string", token_string)
-	fmt.Println("tkn", tkn)
-	fmt.Println("claims", claims)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
+	return claims
 }
 
 //  parse token reads a jwt token and returns a models.User struct
@@ -84,12 +84,14 @@ func Signup(c *gin.Context) {
 
 		token, _ := newToken(user)
 
-		c.JSON(201, gin.H{
-			"message": "user successfully created",
-			"user":    user,
-			"token":   token,
-		})
-	} else {
+		parseToken(token)
+
+		// 	c.JSON(201, gin.H{
+		// 		"message": "user successfully created",
+		// 		"user":    user,
+		// 		"token":   token,
+		// 	})
+		// } else {
 		c.JSON(400, gin.H{
 			"message": "user already exists",
 		})
