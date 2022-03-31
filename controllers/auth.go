@@ -19,8 +19,6 @@ func Signup(c *gin.Context) {
 
 	json.Unmarshal(jsonData, &user)
 
-	c.JSON(200,
-		user,
-	)
+	c.JSON(200, gin.H{"user": user})
 
 }
