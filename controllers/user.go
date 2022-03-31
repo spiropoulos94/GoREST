@@ -36,7 +36,7 @@ func FindUser(c *gin.Context) {
 
 	if result.Error != nil {
 		c.JSON(400, gin.H{
-			"message": result.Error,
+			"message": result.Error.Error(),
 		})
 		return
 	}
