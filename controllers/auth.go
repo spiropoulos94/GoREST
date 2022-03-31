@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go-api/models"
+	"go-api/utils"
 	"io/ioutil"
 
 	"github.com/gin-gonic/gin"
@@ -21,16 +22,21 @@ func Signup(c *gin.Context) {
 
 	json.Unmarshal(jsonData, &user)
 
-	// tsekare an yparxei hdh
+	userExists := utils.UserExists(user.Email)
 
-	result := models.DB.Where("email = ?", "jinzhu").First(&user)
+	fmt.Println("userExists")
+	fmt.Println(userExists)
 
-	if result.Error != nil {
-		fmt.Println(result.Error.Error())
+	if !userExists {
+		models.DB.Create(&user)
+		c.JSON(200, gin.H{
+			"message": "user successfully created",
+			"user":    user,
+		})
+	} else {
+		c.JSON(400, gin.H{
+			"message": "user already exists",
+		})
 	}
-
-	// an den yparxei user me ayto to mail ftiakse ton
-
-	c.JSON(200, gin.H{"user": user})
 
 }
