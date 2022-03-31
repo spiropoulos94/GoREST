@@ -9,6 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// sto signup tha ftiaxneis user kai tha tou dineis pisw ena JWT token
+
 func Signup(c *gin.Context) {
 	jsonData, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
@@ -18,6 +20,16 @@ func Signup(c *gin.Context) {
 	user := models.User{}
 
 	json.Unmarshal(jsonData, &user)
+
+	// tsekare an yparxei hdh
+
+	result := models.DB.Where("email = ?", "jinzhu").First(&user)
+
+	if result.Error != nil {
+		fmt.Println(result.Error.Error())
+	}
+
+	// an den yparxei user me ayto to mail ftiakse ton
 
 	c.JSON(200, gin.H{"user": user})
 

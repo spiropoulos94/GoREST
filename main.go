@@ -9,7 +9,7 @@ import (
 func main() {
 
 	models.SetupDatabase()
-	models.MakeTables(false)
+	models.MakeTables(true)
 
 	routerStart()
 
