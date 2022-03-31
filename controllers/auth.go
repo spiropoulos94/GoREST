@@ -6,11 +6,26 @@ import (
 	"go-api/models"
 	"go-api/utils"
 	"io/ioutil"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 )
 
-// sto signup tha ftiaxneis user kai tha tou dineis pisw ena JWT token
+var jwtKey = []byte(os.Getenv("JWT_SECRET"))
+
+// newToken encodes User struct into a JWT string
+
+type Claims struct {
+	models.User
+	jwt.StandardClaims
+}
+
+// func newToken(user models.User) string {
+
+// }
+
+//  parse token reads a jwt token and returns a models.User struct
 
 func Signup(c *gin.Context) {
 	jsonData, err := ioutil.ReadAll(c.Request.Body)
@@ -29,9 +44,10 @@ func Signup(c *gin.Context) {
 
 	if !userExists {
 		models.DB.Create(&user)
-		c.JSON(200, gin.H{
+		c.JSON(201, gin.H{
 			"message": "user successfully created",
 			"user":    user,
+			// "token":   token,
 		})
 	} else {
 		c.JSON(400, gin.H{
