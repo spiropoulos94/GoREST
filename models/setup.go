@@ -37,6 +37,8 @@ func MakeTables(allNew bool) {
 		DB.Migrator().DropTable("lists")
 		DB.Migrator().DropTable(&Item{})
 		DB.Migrator().DropTable("list_items")
+		DB.Migrator().DropTable(&User{})
+		DB.Migrator().DropTable("users")
 	}
 
 	DB.AutoMigrate(&List{})
