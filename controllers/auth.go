@@ -91,7 +91,7 @@ func Signup(c *gin.Context) {
 		c.JSON(201, gin.H{
 			"message": "user successfully created",
 			"user":    user,
-			"token":   token,
+			"jwt":     token,
 		})
 	} else {
 		c.JSON(400, gin.H{
@@ -131,8 +131,10 @@ func Signin(c *gin.Context) {
 		models.DB.Where("email = ?", reqBodyData.Email).First(&storedUser)
 
 		if utils.CheckPasswordHash(reqBodyData.Password, storedUser.Password) {
+			token, _ := newToken(storedUser)
 			c.JSON(200, gin.H{
 				"message": "password match",
+				"jwt":     token,
 			})
 			return
 		} else {
