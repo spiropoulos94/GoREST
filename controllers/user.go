@@ -13,7 +13,6 @@ import (
 func GetUsers(c *gin.Context) {
 	var users []models.User
 	result := models.DB.Find(&users)
-
 	if result.Error != nil {
 		c.JSON(400, gin.H{
 			"message": result.Error,

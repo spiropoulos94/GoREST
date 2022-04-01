@@ -27,24 +27,23 @@ func CheckHeaderForJWT() gin.HandlerFunc {
 
 		token := strings.Split(authoriazationHeader, " ")[1]
 
-		fmt.Println(token)
-
 		user := controllers.ParseToken(token)
 
 		dbStoredUser := models.User{}
 
-		result := models.DB.Select("name", "email", "age").First(dbStoredUser, user.Id)
+		result := models.DB.Select("id", "name", "email", "age").First(&dbStoredUser, user.Id)
 
 		if result.Error != nil {
 			fmt.Println("Errow while getting store user from DB")
 			c.JSON(404, gin.H{
-				"error": result.Error.Error(),
+				"error":   result.Error.Error(),
+				"message": "could not find jwt stored user in database",
 			})
 			c.Abort()
 			return
 		}
 
-		c.Set("user", dbStoredUser)
+		c.Set("user", &dbStoredUser)
 
 		c.Next()
 	}
