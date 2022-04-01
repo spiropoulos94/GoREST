@@ -13,6 +13,8 @@ func routerStart() {
 	models.SetupDatabase()
 	models.MakeTables(false)
 
+	//groupare sto "/api" olo to user kai to list
+
 	user := router.Group("/user")
 	list := router.Group("/list")
 
