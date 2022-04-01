@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"go-api/controllers"
+	"go-api/models"
 	"net/http"
 	"strings"
 
@@ -30,7 +31,20 @@ func CheckHeaderForJWT() gin.HandlerFunc {
 
 		user := controllers.ParseToken(token)
 
-		c.Set("user", user)
+		dbStoredUser := models.User{}
+
+		result := models.DB.Select("name", "email", "age").First(dbStoredUser, user.Id)
+
+		if result.Error != nil {
+			fmt.Println("Errow while getting store user from DB")
+			c.JSON(404, gin.H{
+				"error": result.Error.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		c.Set("user", dbStoredUser)
 
 		c.Next()
 	}
