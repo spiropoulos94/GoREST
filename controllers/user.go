@@ -13,7 +13,6 @@ import (
 func GetUsers(c *gin.Context) {
 	var users []models.User
 	result := models.DB.Find(&users)
-	fmt.Println("result", result.RowsAffected)
 
 	if result.Error != nil {
 		c.JSON(400, gin.H{

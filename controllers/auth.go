@@ -24,7 +24,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-func newToken(user models.User) (string, error) {
+func NewToken(user models.User) (string, error) {
 
 	expirationTime := time.Now().Add(120 * time.Hour) // 5 days
 
@@ -48,7 +48,7 @@ func newToken(user models.User) (string, error) {
 	return tokenString, nil
 }
 
-func parseToken(token_string string) *Claims {
+func ParseToken(token_string string) *Claims {
 
 	claims := &Claims{}
 
@@ -86,7 +86,7 @@ func Signup(c *gin.Context) {
 		user.Password, _ = utils.HashPassword(strings.TrimSpace(user.Password))
 		models.DB.Create(&user)
 
-		token, _ := newToken(user)
+		token, _ := NewToken(user)
 
 		c.JSON(201, gin.H{
 			"message": "user successfully created",
@@ -131,7 +131,7 @@ func Signin(c *gin.Context) {
 		models.DB.Where("email = ?", reqBodyData.Email).First(&storedUser)
 
 		if utils.CheckPasswordHash(reqBodyData.Password, storedUser.Password) {
-			token, _ := newToken(storedUser)
+			token, _ := NewToken(storedUser)
 			c.JSON(200, gin.H{
 				"message": "password match",
 				"jwt":     token,
