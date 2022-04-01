@@ -9,6 +9,7 @@ import (
 func CheckHeaderForJWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fmt.Println("MIDDLEWARE LOGGGGINNNNNNG")
+		fmt.Println(c.GetHeader("Authorization"))
 		c.Next()
 	}
 }
