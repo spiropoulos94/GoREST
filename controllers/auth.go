@@ -132,16 +132,12 @@ func Signin(c *gin.Context) {
 
 		if utils.CheckPasswordHash(reqBodyData.Password, storedUser.Password) {
 			c.JSON(200, gin.H{
-				"message":    "password match",
-				"reqUser":    reqBodyData,
-				"storedUser": storedUser,
+				"message": "password match",
 			})
 			return
 		} else {
 			c.JSON(200, gin.H{
-				"message":    "password doesnt match",
-				"reqUser":    reqBodyData,
-				"storedUser": storedUser,
+				"message": "password doesnt match",
 			})
 			return
 		}
