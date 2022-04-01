@@ -15,20 +15,27 @@ func routerStart() {
 
 	//groupare sto "/api" olo to user kai to list
 
-	user := router.Group("/user")
-	list := router.Group("/list")
+	api := router.Group("/api", CheckHeaderForJWT())
+	{
+		userGroup := api.Group("/user")
+		{
+			// user group handlers
+			userGroup.GET("/", controllers.GetUsers)
+			userGroup.GET("/:id", controllers.FindUser)
+			userGroup.POST("/", controllers.CreateUser)
+			userGroup.DELETE("/:id", controllers.DeleteUser)
+		}
 
-	// User Routes
-	user.GET("/", controllers.GetUsers)
-	user.GET("/:id", controllers.FindUser)
-	user.POST("/", controllers.CreateUser)
-	user.DELETE("/:id", controllers.DeleteUser)
-	// List Routes
-	list.GET("/", controllers.GetLists)
-	list.POST("/", controllers.CreateList)
-	list.GET("/:id", controllers.FindList)
-	list.DELETE("/:id", controllers.DeleteList)
-	list.PUT("/:id", controllers.UpdateList)
+		listGroup := api.Group("/list")
+		{
+			// todo group handlers
+			listGroup.GET("/", controllers.GetLists)
+			listGroup.POST("/", controllers.CreateList)
+			listGroup.GET("/:id", controllers.FindList)
+			listGroup.DELETE("/:id", controllers.DeleteList)
+			listGroup.PUT("/:id", controllers.UpdateList)
+		}
+	}
 
 	// Auth routes
 	router.POST("/signup", controllers.Signup)
