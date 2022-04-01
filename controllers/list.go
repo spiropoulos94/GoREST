@@ -11,13 +11,20 @@ import (
 )
 
 func CreateList(c *gin.Context) {
-	//checkare mipws edw mesa ginetai to lathos, ftiaxnontai lathos relations
 	var list models.List
 
 	jsonData, _ := ioutil.ReadAll(c.Request.Body)
 	json.Unmarshal(jsonData, &list)
 
 	list.Name = strings.Trim(list.Name, " ")
+
+	// user, _ := c.Get("user")
+
+	// c.JSON(200, gin.H{
+	// 	"user": user,
+	// })
+
+	// c.Abort()
 
 	if list.Name == "" {
 		c.JSON(400, gin.H{
