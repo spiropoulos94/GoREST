@@ -30,6 +30,7 @@ func routerStart() {
 
 	// Auth routes
 	router.POST("/signup", controllers.Signup)
+	router.POST("/signin", controllers.Signin)
 
 	router.Run()
 }

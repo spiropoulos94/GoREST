@@ -6,7 +6,9 @@ import (
 	"go-api/models"
 	"go-api/utils"
 	"io/ioutil"
+	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -81,7 +83,7 @@ func Signup(c *gin.Context) {
 	fmt.Println(userExists)
 
 	if !userExists {
-		user.Password, _ = utils.HashPassword(user.Password)
+		user.Password, _ = utils.HashPassword(strings.TrimSpace(user.Password))
 		models.DB.Create(&user)
 
 		token, _ := newToken(user)
@@ -95,6 +97,51 @@ func Signup(c *gin.Context) {
 		c.JSON(400, gin.H{
 			"message": "user already exists",
 		})
+	}
+
+}
+
+func Signin(c *gin.Context) {
+
+	storedUser := models.User{}
+	reqBodyData := models.User{}
+
+	jsonData, _ := ioutil.ReadAll(c.Request.Body)
+	json.Unmarshal(jsonData, &reqBodyData)
+
+	email := strings.TrimSpace(reqBodyData.Email)
+	password := strings.TrimSpace(reqBodyData.Password)
+
+	if email == "" || password == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "need email and password",
+		})
+		return
+	}
+
+	userExists := utils.UserExists(reqBodyData.Email)
+
+	if !userExists {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "user does not exist",
+		})
+		return
+	} else {
+		// sygkrine to password sto request me to pass tou user
+		models.DB.Where("email = ?", reqBodyData.Email).First(&storedUser)
+
+		if utils.CheckPasswordHash(reqBodyData.Password, storedUser.Password) {
+			c.JSON(200, gin.H{
+				"message": "password match",
+			})
+			return
+		} else {
+			c.JSON(200, gin.H{
+				"message": "password doesnt match",
+			})
+			return
+		}
+
 	}
 
 }
