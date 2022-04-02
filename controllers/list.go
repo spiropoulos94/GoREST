@@ -18,13 +18,11 @@ func CreateList(c *gin.Context) {
 
 	list.Name = strings.Trim(list.Name, " ")
 
-	// user, _ := c.Get("user")
+	userIDfromContext, ok := c.Get("user_id")
 
-	// c.JSON(200, gin.H{
-	// 	"user": user,
-	// })
-
-	// c.Abort()
+	if ok {
+		list.UserID = userIDfromContext.(uint)
+	}
 
 	if list.Name == "" {
 		c.JSON(400, gin.H{

@@ -43,7 +43,8 @@ func CheckHeaderForJWT() gin.HandlerFunc {
 			return
 		}
 
-		c.Set("user", &dbStoredUser)
+		c.Set("user", dbStoredUser)
+		c.Set("user_id", dbStoredUser.ID)
 
 		c.Next()
 	}
