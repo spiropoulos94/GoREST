@@ -48,7 +48,7 @@ func NewToken(user models.User) (string, error) {
 	return tokenString, nil
 }
 
-func ParseToken(token_string string) *Claims {
+func ParseToken(token_string string, c *gin.Context) (*Claims, error) {
 
 	claims := &Claims{}
 
@@ -58,11 +58,16 @@ func ParseToken(token_string string) *Claims {
 
 	if err != nil {
 		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   err.Error(),
+			"message": "Could not validate token",
+		})
+
+		c.Abort()
+		return nil, nil
 	}
 
-	fmt.Println("claims")
-	fmt.Println(claims)
-	return claims
+	return claims, nil
 }
 
 //  parse token reads a jwt token and returns a models.User struct
@@ -78,9 +83,6 @@ func Signup(c *gin.Context) {
 	json.Unmarshal(jsonData, &user)
 
 	userExists := utils.UserExists(user.Email)
-
-	fmt.Println("userExists")
-	fmt.Println(userExists)
 
 	if !userExists {
 		user.Password, _ = utils.HashPassword(strings.TrimSpace(user.Password))

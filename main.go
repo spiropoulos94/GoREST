@@ -8,8 +8,10 @@ import (
 
 func main() {
 
+	makeNewTablesOnInit := true
+
 	models.SetupDatabase()
-	models.MakeTables(false)
+	models.MakeTables(makeNewTablesOnInit)
 
 	routerStart()
 

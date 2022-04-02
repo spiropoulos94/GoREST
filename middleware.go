@@ -27,11 +27,11 @@ func CheckHeaderForJWT() gin.HandlerFunc {
 
 		token := strings.Split(authoriazationHeader, " ")[1]
 
-		user := controllers.ParseToken(token)
+		user, _ := controllers.ParseToken(token, c)
 
 		dbStoredUser := models.User{}
 
-		result := models.DB.Select("id", "name", "email", "age").First(&dbStoredUser, user.Id)
+		result := models.DB.Select("id", "name", "email", "age").First(&dbStoredUser, user.ID)
 
 		if result.Error != nil {
 			fmt.Println("Errow while getting store user from DB")
@@ -43,7 +43,6 @@ func CheckHeaderForJWT() gin.HandlerFunc {
 			return
 		}
 
-		c.Set("user", dbStoredUser)
 		c.Set("user_id", dbStoredUser.ID)
 
 		c.Next()
