@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	makeNewTablesOnInit := true
+	makeNewTablesOnInit := false
 
 	models.SetupDatabase()
 	models.MakeTables(makeNewTablesOnInit)
