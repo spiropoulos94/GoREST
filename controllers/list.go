@@ -74,7 +74,10 @@ func FindList(c *gin.Context) {
 
 func GetLists(c *gin.Context) {
 	var lists []models.List
-	result := models.DB.Preload("Items").Find(&lists)
+
+	userIDfromContext, _ := c.Get("user_id")
+
+	result := models.DB.Where("user_id = ?", userIDfromContext.(uint)).Preload("Items").Find(&lists)
 
 	if result.Error != nil {
 		c.JSON(400, gin.H{
